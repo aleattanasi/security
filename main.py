@@ -8,11 +8,11 @@ def say_hello():
 
 
 @app.route('/a', methods=['GET'])
-def say_hello():
+def saay_hello():
     return "HO ATTIVATO PUB/SUB MA SOLO SE TO CRIR"
 
 @app.route('/c', methods=['GET'])
-def say_hello():
+def saya_hello():
     return "HO ATTIVATO PUB/SUB MA SOLO SE TO CRIR pero stavot ha prmut c"
 
 if __name__ == '__main__':
