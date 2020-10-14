@@ -10,7 +10,6 @@ def say_hello():
 @app.route('/start-event', methods=['POST'])
 #server-istances group
 def events():
-	#event_data = request.data.decode('utf-8')
 	a = "ok fra"
 	b=jsonify(a)
 	return b
