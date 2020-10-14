@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
+
 app = Flask(__name__)
 
 
@@ -9,7 +10,7 @@ def say_hello():
 @app.route('/start-event', methods=['POST'])
 #server-istances group
 def events():
-	event_data = request.data.decode('utf-8')
+	#event_data = request.data.decode('utf-8')
 	a = "ok fra"
 	b=jsonify(a)
 	return b
