@@ -1,7 +1,21 @@
-from flask import Flask, request, Response, jsonify
 
+from flask import Flask, request, Response, jsonify, json
+import datetime;
+from google.cloud import pubsub_v1
 
 app = Flask(__name__)
+
+#funzione per l'invio di dati a pubsub
+def toPubSub(data):
+	project_id = "hexact"
+	topic_id = "EventiSTB"
+
+	publisher = pubsub_v1.PublisherClient()
+	topic_path = publisher.topic_path(project_id, topic_id)
+
+	# When you publish a message, the client returns a future.
+	da = json.dumps(data)
+	future = publisher.publish(topic_path, da.encode('utf-8'))
 
 @app.route('/')
 def index():
@@ -14,39 +28,58 @@ def index():
 </form>
 """
 
-@app.route('/start-event', methods=['POST'])
+@app.route('/sessionBegin', methods=['POST'])
 #server-istances group
-def events():
-	event_data = request.data.decode('utf-8')
-	a = "200"
-	#r = requests.post('http://127.0.0.1:8080/ack', data=a)
-	b=jsonify(a)
+def begin():
+	#todo qui mi arrivano {"client_id" e context_info} ma in context info non c'è il timestamp, per ora lo calcolo io
+	#todo il client può avere una sola sessione aperta alla volta, calcolare sess id come hash(client_id)+timestamp?
+	#cosi' potrei sempre risalire a quale client ha aperto la sessione e a che ora
+	event_data = request.data
+	data = json.loads(event_data)
+	cl_id = data["client_id"]
+
+	#todo l'hash viene negativo a volte, se negativo lo moltiplico per -1?
+	session_id = sessiId(cl_id)
+	#todo cosa invio a ps/dataflow? per ora data
+	data = {"event_name":"session_begin", "session_id": session_id}
+	toPubSub(data)
+
+	#SU DATAFLKOW (UNA VOLTA CREATO L'ID MANDO L'EVENTO A P/S) salvo su firestore nuovo doc "clientID" con dentro id sessione e metadati da definire(context_info ad esempio)
+	toClient = {"session_id" : session_id, "format" : "JSONorMP"}
+	b=json.dumps(toClient)
+	return b
+
+#funzione per calcolare l'id della sessione
+def sessiId(client_id):
+	currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+	session = client_id+currentTime
+	session_id = (hash(session))
+	return session_id
+
+
+@app.route('/EventFrame', methods=['POST'])
+#server-istances group
+def event():
+	#qui mi arriva o una lista di eventi o un evento e mando dirett a pubsub
+	event_data = request.data
+	data = json.loads(event_data)
+	a = {"TDB" : "TDB"}
+	b=json.dumps(a)
+	return b
+
+@app.route('/sessionEnd', methods=['POST'])
+#server-istances group
+def end():
+	event_data = request.data
+	data = json.loads(event_data)
+	global SESSIONS
+	for item in SESSIONS:
+		if(item["session_id"] == data["session_id"]):
+			SESSIONS.remove(item)
+	a = {"TDB" : "TDB"}
+	b=json.dumps(a)
 	return b
 
 
-'''
-app = Flask(__name__)
-
-
-@app.route('/', methods=['GET'])
-def say_hello():
-    return "HO ATTIVATO PUB/SUB"
-
-@app.route('/start-event', methods=['POST'])
-#server-istances group
-def events():
-	a = "ok fra"
-	b=jsonify(a)
-	return b
-
-
-@app.route('/a', methods=['GET'])
-def saay_hello():
-    return "HO ATTIVATO PUB/SUB MA SOLO SE TO CRIR"
-
-@app.route('/c', methods=['GET'])
-def saya_hello():
-    return "HO ATTIVATO PUB/SUB MA SOLO SE TO CRIR pero stavot ha prmut c"
-'''
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
