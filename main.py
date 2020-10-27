@@ -21,7 +21,7 @@ def toPubSub(data):
 def index():
 	return """
 <form method="POST" action="/addResource" enctype="multipart/form-data"
-  <label for="fname">Nome  risorsa da scaricare:</label><br>
+  <label for="fname">online</label><br>
   <input type="text" id="nomeintero" name="nomeintero" value="nomeItem_nomeRisorsa">
   <input type="submit">
   <br>
@@ -31,9 +31,7 @@ def index():
 @app.route('/sessionBegin', methods=['POST'])
 #server-istances group
 def begin():
-	#todo qui mi arrivano {"client_id" e context_info} ma in context info non c'è il timestamp, per ora lo calcolo io
-	#todo il client può avere una sola sessione aperta alla volta, calcolare sess id come hash(client_id)+timestamp?
-	#cosi' potrei sempre risalire a quale client ha aperto la sessione e a che ora
+	
 	event_data = request.data
 	data = json.loads(event_data)
 	cl_id = data["client_id"]
@@ -44,7 +42,6 @@ def begin():
 	data = {"event_name":"session_begin", "session_id": session_id}
 	toPubSub(data)
 
-	#SU DATAFLKOW (UNA VOLTA CREATO L'ID MANDO L'EVENTO A P/S) salvo su firestore nuovo doc "clientID" con dentro id sessione e metadati da definire(context_info ad esempio)
 	toClient = {"session_id" : session_id, "format" : "JSONorMP"}
 	b=json.dumps(toClient)
 	return b
