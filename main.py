@@ -7,17 +7,22 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return """
+    return """
 <form method="POST" action="/addResource" enctype="multipart/form-data"
   <label for="fname">IL SERVIZIO SUL GRUPPO DI ISTANZE SUPERVISIONATO E' ONLINE</label><br>
   <br>
 </form>
 """
 
-@app.route('/Start', methods=['POST'])
-#server-istances group
+@app.route('/StartGET', methods=['GET'])
+# server-istances group
 def event():
-	return "funziona"
+    return "funziona"
+
+@app.route('/StartPOST', methods=['POST'])
+# server-istances group
+def evenZt():
+    return "funziona"
 
 
 
