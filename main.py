@@ -1,21 +1,9 @@
 
 from flask import Flask, request, Response, jsonify, json
 import datetime;
-from google.cloud import pubsub_v1
 
 app = Flask(__name__)
 
-#funzione per l'invio di dati a pubsub
-def toPubSub(data):
-	project_id = "sky-it-tech-itv-myaccount-dev"
-	topic_id = "analytics-topic"
-
-	publisher = pubsub_v1.PublisherClient()
-	topic_path = publisher.topic_path(project_id, topic_id)
-
-	# When you publish a message, the client returns a future.
-	da = json.dumps(data)
-	future = publisher.publish(topic_path, da.encode('utf-8'))
 
 @app.route('/')
 def index():
@@ -42,7 +30,6 @@ def begin():
                                    'conn_wifi_strength': "conn_wifi_strength",'conn_router_model': "conn_router_model",'user_external_id': "user_external_id",'user_country_code': "user_country_code",
                                    'user_region_name': "user_region_name",'user_province': "user_province",'user_city': "user_city",'user_isp_name': "user_isp_name", 'app_name': "app_name",
                                    'app_version': "app_version",'app_itv_be_version': "app_itv_be_version"},"info":{}, "opt_info":{}}
-	toPubSub(data)
 
 	#SU DATAFLKOW (UNA VOLTA CREATO L'ID MANDO L'EVENTO A P/S) salvo su firestore nuovo doc "clientID" con dentro id sessione e metadati da definire(context_info ad esempio)
 	toClient = {"session_id" : session_id, "format" : "JSONorMP"}
@@ -64,7 +51,6 @@ def event():
 	#qui mi arriva o una lista di eventi o un evento e mando dirett a pubsub
 	event_data = request.data
 	data = json.loads(event_data)
-	toPubSub(data)
 	return data
 
 @app.route('/sessionEnd', methods=['POST'])
@@ -74,7 +60,6 @@ def end():
 	data = json.loads(event_data)
 	timest = data["event_timestamp"]
 	risp ={"properties":{"event_name":"SESSION_END", "session_id": "session_id", "client_id": "client_id", "event_timestamp":timest}, "info":{}, "opt_info":{}}
-	toPubSub(risp)
 	b=json.dumps(risp)
 	return b
 
