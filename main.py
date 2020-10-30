@@ -14,6 +14,11 @@ def index():
 </form>
 """
 
+@app.route('/Start', methods=['POST'])
+#server-istances group
+def event():
+	return "funziona"
+
 
 
 if __name__ == '__main__':
