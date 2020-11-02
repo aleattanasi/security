@@ -6,8 +6,8 @@ app = Flask(__name__)
 
 #funzione per l'invio di dati a pubsub
 def toPubSub(data):
-	project_id = "sky-it-tech-itv-myaccount-dev"
-	topic_id = "analytics-topic"
+	project_id = "hexact"
+	topic_id = "EventiSTB"
 
 	publisher = pubsub_v1.PublisherClient()
 	topic_path = publisher.topic_path(project_id, topic_id)
