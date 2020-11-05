@@ -33,8 +33,7 @@ def begin():
 	cl_id = data["client_id"]
 	timest = data["event_timestamp"]
 	session_id = sessiId(cl_id)
-	#todo svirgolettare session_id valore
-	#todo gestire bene timestamp, su tm si chiama msg_ts
+
 	data = {"properties":{"event_name":"SESSION_BEGIN", "session_id": "session_id", "client_id": "client_id", "event_timestamp":timest, 'source': "sorg", 'dev_family': "devF", 'dev_type': "devT",'dev_stb_sn': "dev_stb_sn",'dev_stb_id': "dev_stb_id",
                                    'dev_stb_ver': "dev_stb_ver",'dev_stb_model': "dev_stb_model",'dev_stb_name': "dev_stb_name",'dev_stb_man': "dev_stb_man",'dev_stb_as': "dev_stb_as",
                                    'dev_stb_ua': "dev_stb_ua",'dev_sc_sn': "dev_sc_sn",'conn_type': "conn_type",'conn_wifi_freq': "conn_wifi_freq",'conn_wifi_channel': "conn_wifi_channel",
@@ -43,7 +42,6 @@ def begin():
                                    'app_version': "app_version",'app_itv_be_version': "app_itv_be_version"},"info":{}, "opt_info":{}}
 	toPubSub(data)
 
-	#SU DATAFLKOW (UNA VOLTA CREATO L'ID MANDO L'EVENTO A P/S) salvo su firestore nuovo doc "clientID" con dentro id sessione e metadati da definire(context_info ad esempio)
 	toClient = {"session_id" : session_id, "format" : "JSONorMP"}
 	b=json.dumps(toClient)
 	return b
