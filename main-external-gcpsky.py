@@ -34,10 +34,11 @@ def begin():
 	timest = data["event_timestamp"]
 	session_id = sessiId(cl_id)
 
-	data = {"properties":{"event_name":"SESSION_BEGIN", "session_id": "session_id", "client_id": "client_id", "event_timestamp":timest, 'source': "sorg", 'dev_family': "devF", 'dev_type': "devT",'dev_stb_sn': "dev_stb_sn",'dev_stb_id': "dev_stb_id",
+
+	data = {"properties":{"event_name":"SESSION_BEGIN", "session_id": "session_id", "client_id": "client_id", "event_timestamp":timest, 'source': "sorg", 'dev_family': "devF", 'dev_type': "devT",'dev_stb_sn': {"_pii_type_":"0","value":"EI-XXXX"},'dev_stb_id': {"_pii_type_":"0","value":"EI-XXXX"},
                                    'dev_stb_ver': "dev_stb_ver",'dev_stb_model': "dev_stb_model",'dev_stb_name': "dev_stb_name",'dev_stb_man': "dev_stb_man",'dev_stb_as': "dev_stb_as",
-                                   'dev_stb_ua': "dev_stb_ua",'dev_sc_sn': "dev_sc_sn",'conn_type': "conn_type",'conn_wifi_freq': "conn_wifi_freq",'conn_wifi_channel': "conn_wifi_channel",
-                                   'conn_wifi_strength': "conn_wifi_strength",'conn_router_model': "conn_router_model",'user_external_id': "user_external_id",'user_country_code': "user_country_code",
+                                   'dev_stb_ua': "dev_stb_ua",'dev_sc_sn': {"_pii_type_":"0","value":"EI-XXXX"},'conn_type': "conn_type",'conn_wifi_freq': "conn_wifi_freq",'conn_wifi_channel': "conn_wifi_channel",
+                                   'conn_wifi_strength': "conn_wifi_strength",'conn_router_model': "conn_router_model",'user_external_id': {"_pii_type_":"0","value":"EI-XXXX"},'user_country_code': "user_country_code",
                                    'user_region_name': "user_region_name",'user_province': "user_province",'user_city': "user_city",'user_isp_name': "user_isp_name", 'app_name': "app_name",
                                    'app_version': "app_version",'app_itv_be_version': "app_itv_be_version"},"info":{}, "opt_info":{}}
 	toPubSub(data)
