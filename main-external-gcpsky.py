@@ -35,7 +35,7 @@ def index():
 
 
 
-@app.route('/eventFrame', methods=['POST'])
+@app.route('/tvapp-analytics/eventFrame', methods=['POST'])
 #server-istances group
 def event():
     event_data = request.data
