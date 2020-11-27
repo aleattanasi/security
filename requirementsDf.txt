@@ -1,0 +1,6 @@
+google-cloud-firestore
+grpcio
+firebase_admin
+apache-beam
+apitools
+google_apitools
