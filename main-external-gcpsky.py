@@ -44,7 +44,6 @@ def event():
     if "device_info" in data:
         #sessionStart
         cl_id = data["client_id"]
-        event_timest = data["device_info"]["event_ts"]
         session_id = sessiId(cl_id)
         # todo svirgolettare session_id valore
         # todo gestire bene timestamp, su tm si chiama msg_ts
@@ -68,6 +67,7 @@ def event():
             x["properties"]["app_code"] = "XXCXCX"
             toPubSub(x)
         return "frame sent"
+
 
 if __name__ == '__main__':
 	# This is used when running locally. Gunicorn is used to run the
