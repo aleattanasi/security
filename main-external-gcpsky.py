@@ -1,6 +1,8 @@
 from flask import Flask, request, json
 import datetime
 from google.cloud import pubsub_v1
+import hashlib
+
 
 app = Flask(__name__)
 
@@ -18,9 +20,12 @@ def toPubSub(data):
 
 #funzione per calcolare l'id della sessione
 def sessiId(client_id):
-    currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    currentTime = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     client = client_id
-    session = str(abs((hash(client))))
+
+    hash_value = hashlib.md5(client.encode('utf8'))
+    hash_value = int(hash_value.hexdigest(), 16)
+    session = str(hash_value)
     session_id = session+'_'+currentTime
     return session_id
 
@@ -64,7 +69,6 @@ def event():
     else:
         # evtframe
         for x in data:
-            x["properties"]["app_code"] = "XXCXCX"
             toPubSub(x)
         return "frame sent"
 
