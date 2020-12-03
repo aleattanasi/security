@@ -26,7 +26,9 @@ def sessiId(client_id):
     hash_value = hashlib.md5(client.encode('utf8'))
     hash_value = int(hash_value.hexdigest(), 16)
     session = str(hash_value)
-    session_id = session+'_'+currentTime
+    #todo: cosi' creo piu sessioni per lo stesso client, va bene?
+    #session_id = session+'_'+currentTime
+    session_id = session
     return session_id
 
 @app.route('/')
@@ -52,10 +54,10 @@ def event():
         session_id = sessiId(cl_id)
         # todo svirgolettare session_id valore
         # todo gestire bene timestamp, su tm si chiama msg_ts
-        messaggio = {"properties": {"event_name": "SESSION_BEGIN", "session_id": "session_id", "client_id": "client_id", "event_timestamp":data["device_info"]["msg_ts"],
+        messaggio = {"properties": {"event_name": "SESSION_BEGIN", "session_id": session_id, "client_id": "client_id", "event_timestamp":data["device_info"]["msg_ts"],
                                     "device_info": data["device_info"]}, "info": {}, "opt_info": {}}
         toPubSub(messaggio)
-        toClient = {"session_id": "session_id", "format": "JSONorMP"}
+        toClient = {"session_id": session_id, "format": "JSONorMP"}
         b = json.dumps(toClient)
         return b
     elif "session_id" in data:
@@ -71,6 +73,7 @@ def event():
         for x in data:
             toPubSub(x)
         return "frame sent"
+
 
 
 if __name__ == '__main__':
